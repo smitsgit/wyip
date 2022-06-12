@@ -1,3 +1,16 @@
+from tokens import Token, TokenType
+
+keywords = {
+    "let": Token(TokenType.LET, "let"),
+    "fn": Token(TokenType.FUNCTION, "fn"),
+    "true": Token(TokenType.TRUE, "true"),
+    "false": Token(TokenType.FALSE, "false"),
+    "if": Token(TokenType.IF, "if"),
+    "else": Token(TokenType.ELSE, "else"),
+    "return": Token(TokenType.RETURN, "return"),
+}
+
+
 class Lexer:
     def __init__(self, input: str):
         self._input = input
@@ -8,57 +21,57 @@ class Lexer:
     def next_token(self) -> Token:
         self.skip_none()
         self.skip_whitespace()
-        tok: TokenType = None
+        tok: Token = None
         if self.chr == '=':
             if self.peek_chr() == '=':
                 self.read_chr()
-                tok = Token(TokenTypes.EQ, "==")
+                tok = Token(TokenType.EQ, "==")
             else:
-                tok = Token(TokenTypes.ASSIGN, self.chr)
+                tok = Token(TokenType.ASSIGN, self.chr)
         elif self.chr == '+':
-            tok = Token(TokenTypes.PLUS, self.chr)
+            tok = Token(TokenType.PLUS, self.chr)
         elif self.chr == '-':
-            tok = Token(TokenTypes.MINUS, self.chr)
+            tok = Token(TokenType.MINUS, self.chr)
         elif self.chr == '(':
-            tok = Token(TokenTypes.LPAREN, self.chr)
+            tok = Token(TokenType.LPAREN, self.chr)
         elif self.chr == ')':
-            tok = Token(TokenTypes.RPAREN, self.chr)
+            tok = Token(TokenType.RPAREN, self.chr)
         elif self.chr == '{':
-            tok = Token(TokenTypes.LBRACE, self.chr)
+            tok = Token(TokenType.LBRACE, self.chr)
         elif self.chr == '}':
-            tok = Token(TokenTypes.RBRACE, self.chr)
+            tok = Token(TokenType.RBRACE, self.chr)
         elif self.chr == ',':
-            tok = Token(TokenTypes.COMMA, self.chr)
+            tok = Token(TokenType.COMMA, self.chr)
         elif self.chr == ';':
-            tok = Token(TokenTypes.SEMICOLON, self.chr)
+            tok = Token(TokenType.SEMI_COLON, self.chr)
         elif self.chr == '!':
             if self.peek_chr() == '=':
                 self.read_chr()
-                tok = Token(TokenTypes.NOT_EQ, "!=")
+                tok = Token(TokenType.NOT_EQ, "!=")
             else:
-                tok = Token(TokenTypes.BANG, self.chr)
+                tok = Token(TokenType.BANG, self.chr)
         elif self.chr == '*':
-            tok = Token(TokenTypes.ASTERISK, self.chr)
+            tok = Token(TokenType.ASTERISK, self.chr)
         elif self.chr == '/':
-            tok = Token(TokenTypes.SLASH, self.chr)
+            tok = Token(TokenType.SLASH, self.chr)
         elif self.chr == '<':
-            tok = Token(TokenTypes.LT, self.chr)
+            tok = Token(TokenType.LT, self.chr)
         elif self.chr == '>':
-            tok = Token(TokenTypes.GT, self.chr)
+            tok = Token(TokenType.GT, self.chr)
         elif self.chr == 0:
-            tok = Token(TokenTypes.EOF, "")
+            tok = Token(TokenType.EOF, "")
         else:
             if self.is_letter(self.chr):
                 identifier = self.read_identifier()
                 if identifier in keywords:
                     return keywords[identifier]
                 else:
-                    return Token(TokenTypes.IDENT, identifier)
+                    return Token(TokenType.IDENTIFIER, identifier)
             elif self.is_number(self.chr):
                 number = self.read_num()
-                return Token(TokenTypes.INT, number)
+                return Token(TokenType.INTEGER, number)
             else:
-                return Token(TokenTypes.ILLEGAL, self.chr)
+                return Token(TokenType.ILLEGAL, self.chr)
         self.read_chr()
         return tok
 
@@ -117,6 +130,6 @@ class Lexer:
 
     def __next__(self):
         tok = self.next_token()
-        if tok == Token(TokenTypes.EOF, ""):
+        if tok == Token(TokenType.EOF, ""):
             raise StopIteration
         return tok

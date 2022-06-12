@@ -1,10 +1,5 @@
 from enum import Enum
-
-
-@dataclasses
-class Token:
-    type: TokenType
-    literal: str
+from dataclasses import dataclass
 
 
 class TokenType(Enum):
@@ -43,3 +38,9 @@ class TokenType(Enum):
     IF = "IF"
     ELSE = "ELSE"
     RETURN = "RETURN"
+
+
+@dataclass
+class Token:
+    type: TokenType
+    literal: str
