@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
+from tokens import Token
 
 
 class Node(ABC):

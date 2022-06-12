@@ -1,5 +1,4 @@
 from enum import Enum
-from dataclasses import dataclass
 
 
 class TokenType(Enum):
@@ -40,7 +39,7 @@ class TokenType(Enum):
     RETURN = "RETURN"
 
 
-@dataclass
 class Token:
-    type: TokenType
-    literal: str
+    def __init__(self, type, literal):
+        self.type = type
+        self.literal = literal
