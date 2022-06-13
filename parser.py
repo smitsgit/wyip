@@ -1,7 +1,8 @@
 from mylexer import Lexer
 from tokens import Token, TokenType
 from myast import Program, Statement, \
-    LetStatement, Identifier, ReturnStatement, ExpressionStatement, Expression
+    LetStatement, Identifier, ReturnStatement,\
+    ExpressionStatement, Expression, IntegerLiteral
 from enum import IntEnum
 from typing import Callable
 
@@ -41,6 +42,7 @@ class Parser:
         parser = Parser(lexer)
         parser.initialize_cur_peek_tokens()
         parser.register_prefix(TokenType.IDENTIFIER, parser.parse_identifier)
+        parser.register_prefix(TokenType.INTEGER, parser.parse_integer)
         return parser
 
     def next_token(self):
@@ -57,6 +59,10 @@ class Parser:
             self.next_token()
 
         return program
+
+    def parse_integer(self):
+        int_literal = IntegerLiteral(self.cur_token, int(self.cur_token.literal))
+        return int_literal
 
     def parse_identifier(self):
         ident = Identifier(self.cur_token, self.cur_token.literal)

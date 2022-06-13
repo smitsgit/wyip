@@ -22,6 +22,18 @@ class Expression(Node):
         pass
 
 
+class IntegerLiteral(Expression):
+    def __init__(self, token: Token, value: int):
+        self.token = token
+        self.value = value
+
+    def token_literal(self):
+        return self.token.literal
+
+    def __str__(self):
+        return str(self.value)
+
+
 class Identifier(Expression):
     def __init__(self, token: Token, value: Expression):
         self.token = token

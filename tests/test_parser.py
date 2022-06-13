@@ -54,3 +54,14 @@ def test_identifier_expressions():
     assert program is not None
     assert len(program.statements) == 1
     assert str(program) == "foobar"
+
+
+def test_integer_literal_expressions():
+    instr = "10;"
+    lexer = Lexer(instr)
+    parser = Parser.new(lexer)
+    program = parser.parse()
+    assert len(parser.errors) == 0
+    assert program is not None
+    assert len(program.statements) == 1
+    assert str(program) == "10"
