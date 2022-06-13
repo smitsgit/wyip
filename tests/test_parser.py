@@ -44,3 +44,13 @@ def test_return_statements():
     assert program is not None
     assert len(program.statements) == 2
 
+
+def test_identifier_expressions():
+    instr = "foobar;"
+    lexer = Lexer(instr)
+    parser = Parser.new(lexer)
+    program = parser.parse()
+    assert len(parser.errors) == 0
+    assert program is not None
+    assert len(program.statements) == 1
+    assert str(program) == "foobar"

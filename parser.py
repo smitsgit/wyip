@@ -1,6 +1,19 @@
 from mylexer import Lexer
 from tokens import Token, TokenType
-from myast import Program, Statement, LetStatement, Identifier, ReturnStatement
+from myast import Program, Statement, \
+    LetStatement, Identifier, ReturnStatement, ExpressionStatement, Expression
+from enum import IntEnum
+from typing import Callable
+
+
+class Precedence(IntEnum):
+    LOWEST = 1,
+    EQUALS = 2,
+    LESS_GREATER = 3,
+    SUM = 4,  # + -
+    PRODUCT = 5,  # * /
+    PREFIX = 6,
+    CALL = 7
 
 
 class Parser:
@@ -10,6 +23,14 @@ class Parser:
         self.cur_token = cur_token
         self.peek_token = peek_token
         self.errors = []
+        self.prefix_parsers: Dict[Token, Callable[[], Expression]] = {}
+        self.infix_parsers: Dict[Token, Callable[[Expression], Expression]] = {}
+
+    def register_prefix(self, token: TokenType, func: Callable[[], Expression]):
+        self.prefix_parsers[token] = func
+
+    def register_infix(self, token: TokenType, func: Callable[[Expression], Expression]):
+        self.infix_parsers[token] = func
 
     def initialize_cur_peek_tokens(self):
         self.next_token()
@@ -19,6 +40,7 @@ class Parser:
     def new(cls, lexer: Lexer):
         parser = Parser(lexer)
         parser.initialize_cur_peek_tokens()
+        parser.register_prefix(TokenType.IDENTIFIER, parser.parse_identifier)
         return parser
 
     def next_token(self):
@@ -75,12 +97,31 @@ class Parser:
         stmt = ReturnStatement(cur_token)
         return stmt
 
+    def parse_expression(self, priority):
+        prefix_fn = self.prefix_parsers[self.cur_token.type]
+        if prefix_fn is None:
+            print(f"No prefix parser found for {self.cur_token.type}")
+            return None
+        left_exp = prefix_fn()
+        return left_exp
+
+    def parse_expression_statement(self):
+        cur_token = self.cur_token
+        expression = self.parse_expression(Precedence.LOWEST)
+
+        stmt = ExpressionStatement(cur_token, expression)
+        if self.peek_token.type == TokenType.SEMI_COLON:
+            self.next_token()
+        return stmt
+
     def parse_statement(self) -> Statement:
         match self.cur_token.type:
             case TokenType.LET:
                 return self.parse_let_statement()
             case TokenType.RETURN:
                 return self.parse_return_statement()
+            case _:
+                return self.parse_expression_statement()
 
     def peek_error(self, tok_type: TokenType):
         msg = f'expected next token to be of ' \
