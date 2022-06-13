@@ -41,6 +41,15 @@ class LetStatement(Statement):
         return self.token.literal
 
 
+class ReturnStatement(Statement):
+    def __init__(self, token: Token, return_val: Expression = None):
+        self.token = token
+        self.return_val = return_val
+
+    def token_literal(self):
+        return self.token.literal
+
+
 class Program:
     def __init__(self, statements: list[Node] = None):
         if statements is None:

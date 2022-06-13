@@ -11,7 +11,11 @@ def main():
 
         parser = Parser.new(lexer)
         program = parser.parse()
-        print(program.statements[0].identifier.value)
+        if parser.errors:
+            for msg in parser.errors:
+                print(msg)
+        else:
+            print(program.statements[0].identifier.value)
 
 
 if __name__ == '__main__':
