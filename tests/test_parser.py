@@ -65,3 +65,25 @@ def test_integer_literal_expressions():
     assert program is not None
     assert len(program.statements) == 1
     assert str(program) == "10"
+
+
+def test_prefix_expression():
+    instr = "!10;"
+    lexer = Lexer(instr)
+    parser = Parser.new(lexer)
+    program = parser.parse()
+    assert len(parser.errors) == 0
+    assert program is not None
+    assert len(program.statements) == 1
+    assert str(program) == "(!10)"
+
+
+def test_infix_expression():
+    instr = "5 + 5;"
+    lexer = Lexer(instr)
+    parser = Parser.new(lexer)
+    program = parser.parse()
+    assert len(parser.errors) == 0
+    assert program is not None
+    assert len(program.statements) == 1
+    assert str(program) == "(5 + 5)"

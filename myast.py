@@ -22,6 +22,33 @@ class Expression(Node):
         pass
 
 
+class InfixExpression(Expression):
+    def __init__(self, token: Token, left: Expression, operator: str, right: Expression = None):
+        self.token = token
+        self.operator = operator
+        self.left = left
+        self.right = right
+
+    def token_literal(self):
+        return self.token.literal
+
+    def __str__(self):
+        return "(" + str(self.left) + " " + self.operator + " " + str(self.right) + ")"
+
+
+class PrefixExpression(Expression):
+    def __init__(self, token: Token, operator: str, right: Expression = None):
+        self.token = token
+        self.operator = operator
+        self.right = right
+
+    def token_literal(self):
+        return self.token.literal
+
+    def __str__(self):
+        return "(" + self.operator + str(self.right) + ")"
+
+
 class IntegerLiteral(Expression):
     def __init__(self, token: Token, value: int):
         self.token = token

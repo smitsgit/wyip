@@ -14,6 +14,7 @@ class TokenType(Enum):
     PLUS = "+"
     MINUS = "-"
     SLASH = "/"
+    ASTERISK = "*"
     LT = "<"
     GT = ">"
     BANG = "!"
